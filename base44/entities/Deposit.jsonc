@@ -1,0 +1,40 @@
+{
+  "name": "Deposit",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "deposit_amount": {
+      "type": "number"
+    },
+    "received_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "refund_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "refund_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Held",
+        "Partially Refunded",
+        "Refunded"
+      ],
+      "default": "Held"
+    },
+    "remarks": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "deposit_amount"
+  ]
+}

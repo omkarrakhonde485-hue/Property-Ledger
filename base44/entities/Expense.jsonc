@@ -1,0 +1,38 @@
+{
+  "name": "Expense",
+  "type": "object",
+  "properties": {
+    "property_id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Electricity",
+        "Water",
+        "Internet",
+        "Maintenance",
+        "Repairs",
+        "Cleaning",
+        "Security",
+        "Miscellaneous"
+      ]
+    },
+    "amount": {
+      "type": "number"
+    },
+    "expense_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "property_id",
+    "category",
+    "amount",
+    "expense_date"
+  ]
+}

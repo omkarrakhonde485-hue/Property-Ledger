@@ -1,0 +1,75 @@
+{
+  "name": "Tenant",
+  "type": "object",
+  "properties": {
+    "property_id": {
+      "type": "string"
+    },
+    "room_id": {
+      "type": "string"
+    },
+    "bed_id": {
+      "type": "string"
+    },
+    "full_name": {
+      "type": "string"
+    },
+    "mobile_number": {
+      "type": "string"
+    },
+    "alternate_mobile": {
+      "type": "string"
+    },
+    "aadhaar_number": {
+      "type": "string"
+    },
+    "occupation": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "emergency_contact_name": {
+      "type": "string"
+    },
+    "emergency_contact_number": {
+      "type": "string"
+    },
+    "family_member_count": {
+      "type": "number",
+      "default": 0
+    },
+    "joining_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "vacating_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "monthly_rent": {
+      "type": "number"
+    },
+    "security_deposit": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Notice Given",
+        "Vacated"
+      ],
+      "default": "Active"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "property_id",
+    "room_id",
+    "full_name",
+    "mobile_number"
+  ]
+}

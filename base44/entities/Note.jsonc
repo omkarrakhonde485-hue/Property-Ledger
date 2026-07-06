@@ -1,0 +1,29 @@
+{
+  "name": "Note",
+  "type": "object",
+  "properties": {
+    "entity_type": {
+      "type": "string",
+      "enum": [
+        "Property",
+        "Floor",
+        "Room",
+        "Tenant"
+      ]
+    },
+    "entity_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "entity_type",
+    "entity_id",
+    "title"
+  ]
+}

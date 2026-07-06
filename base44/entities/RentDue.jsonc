@@ -1,0 +1,44 @@
+{
+  "name": "RentDue",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "property_id": {
+      "type": "string"
+    },
+    "month": {
+      "type": "number",
+      "description": "Month number 1-12"
+    },
+    "year": {
+      "type": "number"
+    },
+    "rent_amount": {
+      "type": "number"
+    },
+    "amount_paid": {
+      "type": "number",
+      "default": 0
+    },
+    "pending_amount": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Unpaid",
+        "Partially Paid",
+        "Paid"
+      ],
+      "default": "Unpaid"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "month",
+    "year",
+    "rent_amount"
+  ]
+}
