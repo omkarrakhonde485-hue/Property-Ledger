@@ -37,6 +37,14 @@ This is an **owner-only management application**. It is built for simplicity, hi
 * Outstanding rent by property
 * Dynamic charts powered by Recharts
 
+### 📋 Audit, Compliance & Tenant Portal
+* **Dedicated Tenant Interface** (`/tenant-portal`): A mobile-responsive standalone tenant web application.
+* **Complaints Desk**: Form for tenants to submit maintenance issues directly with status badges (**Open**, **In Progress**, **Resolved**).
+* **Audit & Legal Compliance**: Track Police Verification status, KYC document proofs, and digital Lease Agreements.
+* **Legal Agreement Signing**: Interactive lease agreement viewer allowing tenants to digitally sign their rent contract.
+* **Tax-Compliant HRA Rent Receipts**: One-click printable rent receipt generation for tenants with automatic number-to-words currency conversion.
+* **Demo Preview Selector**: Instant toggle allowing judges to test the portal from any seeded tenant's perspective.
+
 ### 🌐 Multilingual Support
 * 🇬🇧 English
 * 🇮🇳 Marathi
