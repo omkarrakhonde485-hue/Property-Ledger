@@ -70,39 +70,83 @@ This is an **owner-only management application**. It is built for simplicity, hi
 
 ---
 
-## 🧠 AI & Automation Architecture
+---
 
-The platform integrates a robust multi-tiered AI and automation pipeline designed to be highly responsive, reliable, and cost-effective:
+## 🏛️ Comprehensive System Architecture
+
+Property Ledger is engineered as a decoupled full-stack application featuring a dual-portal frontend, a high-throughput FastAPI SQLite backend, an intelligent caching layer, and a multi-tiered AI and messaging pipeline.
 
 ```mermaid
 graph TD
-    A[Frontend Action] -->|Request Analysis| B[FastAPI Backend]
-    B -->|Fetch Property Localities| C[(SQLite DB)]
-    C -->|Return Area & Rents| B
-    B -->|Tavily Search API| D[Web Search Rents]
-    D -->|Rents Snippets| B
-    B -->|1. Try Google Gemini API| E[Gemini 2.0 Flash]
-    E -->|Success: 200| H[Generate Valuation Report]
-    E -->|Fail / 429 Quota Exceeded| F[2. Try OpenRouter API]
-    F -->|openrouter/free| G[OpenRouter Free Model]
-    G -->|Success: 200| H
-    F -->|Fail / Network Error| I[3. Mock Fallback Intelligence]
-    I -->|Pre-compiled Noida/Pune Reports| H
-    H -->|Return JSON| A
+    subgraph Frontend Layer [React + Vite Client]
+        LP[Landing Page / Navbar]
+        LD[Landlord Dashboard - /dashboard]
+        TP[Standalone Tenant Portal - /tenant-portal]
+    end
+
+    subgraph Backend Layer [FastAPI Core Engine]
+        API[FastAPI REST Router - main.py]
+        SQL[(SQLite Database - data.db)]
+        CACHE[(market_analysis_cache Table)]
+    end
+
+    subgraph External AI & Services [AI & Automation Pipeline]
+        TAV[Tavily Search API - Web Rents]
+        GEM[Google Gemini 2.0 Flash]
+        OR[OpenRouter API - openrouter/free]
+        MUD[Mudslide CLI - WhatsApp Gateway]
+    end
+
+    %% Frontend Interactions
+    LD -->|CRUD Operations| API
+    TP -->|File Uploads & Tickets| API
+
+    %% DB & Cache Flow
+    API <-->|SQL Queries| SQL
+    API <-->|Cached Analysis Check| CACHE
+
+    %% AI Market Analysis Flow
+    API -->|1. Geolocation Search| TAV
+    TAV -->|Rent Snippets| API
+    API -->|2. Primary Prompt| GEM
+    GEM -->|Success: 200| CACHE
+    GEM -->|429 Quota Error| OR
+    OR -->|Success: 200| CACHE
+
+    %% WhatsApp Automation Flow
+    API -->|3. Personalized Draft| GEM
+    API -->|4. Dispatch Message| MUD
+    MUD -->|WhatsApp Web API| WhatsApp[Tenant Mobile Device]
 ```
 
-### 1. Automated Smart WhatsApp Reminders
-*   **Gemini Message Personalization**: When triggering rent reminders, Gemini 2.0 Flash automatically drafts a polite, professional, and emoji-rich message tailored to the tenant's outstanding balance, joining date, and name.
-*   **Mudslide Automation Subprocess**: The backend runs `npx mudslide` via subprocess to link and push messages directly to WhatsApp Web.
-*   **Dual API Key Fallback**: If the primary Gemini key is blocked or limited, it forwards the prompt to OpenRouter, falling back to a static friendly text reminder if both APIs are down.
+---
 
-### 2. AI Market Insights & Rent Valuation
-*   **Tavily Search Integration**: The app retrieves the city/address of properties and makes a target search call to the Tavily API to fetch active hostel, PG, and co-living rent listings in that specific neighborhood.
-*   **AI Valuation Comparison**: Gemini compares the property's default rents against these web search results to evaluate if the rooms are underpriced, overpriced, or competitive. It outputs actionable suggestions (amenity add-ons, price increases).
-*   **Cascaded Fault Tolerance**: The system automatically cascades through:
-    1.  **Google AI Studio (Gemini 2.0 Flash)**
-    2.  **OpenRouter (`openrouter/free` router)**
-    3.  **Local Fallback Intelligence** (serving contextually accurate Noida & Pune reports to prevent any live demo failure).
+## 🧠 Core Architecture Pipelines Explained
+
+### 1. 🌐 Dual-Portal Frontend Architecture
+* **Landlord Ledger Dashboard** (`/dashboard`, `/tenants`, `/properties`, `/reports`, `/ai-insights`): Clean, desktop-first management portal equipped with financial charts, occupancy tracking, and AI valuation cards.
+* **Standalone Mobile Tenant Portal** (`/tenant-portal`): Completely isolated, mobile-optimized tenant interface allowing occupants to track dues, upload KYC documents, review/digitally sign lease deeds, download HRA tax receipts, and lodge maintenance complaints. Includes a **Demo Preview Selector** for judges to instantly switch tenant views.
+
+### 2. ⚡ FastAPI Backend & Persistent SQLite Caching
+* **Generic High-Performance REST Layer**: Generic CRUD handler in FastAPI providing RESTful routes (`/api/properties`, `/api/tenants`, `/api/complaints`, etc.) with standard sorting and query filtering.
+* **Smart Analysis Caching**: Live market rent analyses are stored inside SQLite's `market_analysis_cache` table. Consecutive page visits load instantaneously from the cache, while manual refresh requests (`?refresh=true`) force a live API query to Tavily and Gemini before updating the database.
+
+### 3. 🤖 AI Market Rent Valuation Pipeline
+* **Target Geolocation Search**: Automatically extracts property address, city, and pincode to formulate search queries via the **Tavily Web Search API**, acquiring current local PG and co-living rent benchmarks.
+* **LLM Valuation Engine**: Prompts **Google Gemini 2.0 Flash** with property room defaults and live web search snippets to evaluate room pricing position (*Underpriced*, *Overpriced*, *Competitive*) and provide actionable yield-boosting advice.
+* **3-Tier Fault Tolerance**:
+  1. **Google Gemini 2.0 Flash API** (Primary)
+  2. **OpenRouter (`openrouter/free` router)** (Secondary fallback upon HTTP 429 quota limits)
+  3. **Local Mock Intelligence Engine** (Context-aware Noida & Pune fallbacks ensuring zero demo downtime during network failures)
+
+### 4. 📲 Automated WhatsApp Notification Engine
+* **Contextual AI Drafting**: Gemini drafts personalized payment reminders incorporating tenant names, joining dates, due amounts, and room numbers.
+* **Subprocess Dispatch**: FastAPI executes `npx mudslide` via headless subprocesses to transmit messages straight to the tenant's WhatsApp phone number.
+
+### 5. 📋 Legal Audit & Compliance Engine
+* **Digital Lease E-Signatures**: Rendered 11-month lease agreement deeds allowing tenants to review terms and affix digital signature records.
+* **HRA Tax-Compliant Receipts**: One-click printable receipt generator equipped with official stamp placeholders and automated number-to-words currency formatting (*e.g., ₹12,000 ➔ Twelve Thousand Rupees Only*).
+* **Police & KYC Audit Vault**: Centralized document management tracking municipal police verification status and identity proofs.
 
 ---
 
@@ -142,6 +186,7 @@ The application is built around the following SQL tables:
 * 📅 `rent_dues`
 * 💸 `expenses`
 * 📂 `tenant_documents`
+* 🛠️ `complaints`
 * 📝 `notes`
 
 ### Property Hierarchy
