@@ -98,6 +98,13 @@ def startup():
         schema_sql = f.read()
     with get_db() as conn:
         conn.executescript(schema_sql)
+        conn.execute("""
+        CREATE TABLE IF NOT EXISTS market_analysis_cache (
+            property_id INTEGER PRIMARY KEY,
+            analysis TEXT NOT NULL,
+            created_at TEXT DEFAULT (datetime('now'))
+        )
+        """)
 
 @app.post("/api/send-reminder")
 async def send_reminder(request: Request):
@@ -176,9 +183,11 @@ async def send_reminder(request: Request):
         }
 
 @app.get("/api/market-analysis")
-async def get_market_analysis():
+async def get_market_analysis(request: Request):
     import urllib.request
     import json
+    
+    refresh = request.query_params.get("refresh") == "true"
     
     # 1. Fetch properties & default rents
     properties_data = []
@@ -192,12 +201,22 @@ async def get_market_analysis():
             rooms = cursor.fetchall()
             rooms_list = [dict(r) for r in rooms]
             
+            # Check cache if not refresh
+            cached_analysis = None
+            if not refresh:
+                cursor.execute("SELECT analysis FROM market_analysis_cache WHERE property_id = ?", (p['id'],))
+                cache_row = cursor.fetchone()
+                if cache_row:
+                    cached_analysis = cache_row['analysis']
+            
             properties_data.append({
+                "id": p["id"],
                 "name": p["name"],
                 "address": p["address"],
                 "city": p["city"],
                 "state": p["state"],
-                "rooms": rooms_list
+                "rooms": rooms_list,
+                "cached_analysis": cached_analysis
             })
             
     if not properties_data:
@@ -211,9 +230,20 @@ async def get_market_analysis():
         return {"reports": [{"property_name": "Error", "city": "", "analysis": "Gemini API Key is not configured. Please add GEMINI_API_KEY to your backend/.env file."}]}
         
     for prop in properties_data:
-        city = prop["city"] or "Noida"
-        address = prop["address"] or ""
+        prop_id = prop["id"]
         prop_name = prop["name"]
+        city = prop["city"] or "Noida"
+        
+        # If cache is valid, use it
+        if prop["cached_analysis"]:
+            reports.append({
+                "property_name": prop_name,
+                "city": city,
+                "analysis": prop["cached_analysis"]
+            })
+            continue
+            
+        address = prop["address"] or ""
         
         # Build search query
         query = f"average rent PG hostel room price single double sharing in {address} {city}"
@@ -272,23 +302,16 @@ async def get_market_analysis():
         Keep it direct, professional, and readable. Use emojis for styling.
         """
         
+        analysis_text = ""
         try:
             model = genai.GenerativeModel("gemini-2.0-flash")
             response = model.generate_content(prompt)
-            reports.append({
-                "property_name": prop_name,
-                "city": city,
-                "analysis": response.text.strip()
-            })
+            analysis_text = response.text.strip()
         except Exception as ai_err:
             print(f"Gemini generation failed: {ai_err}. Trying OpenRouter fallback.")
             try:
-                analysis = call_openrouter(prompt)
-                reports.append({
-                    "property_name": prop_name,
-                    "city": city,
-                    "analysis": analysis + "\n\n*(Note: Generated via OpenRouter fallback model)*"
-                })
+                analysis_text = call_openrouter(prompt)
+                analysis_text += "\n\n*(Note: Generated via OpenRouter fallback model)*"
             except Exception as or_err:
                 print(f"OpenRouter failed: {or_err}. Falling back to static mock report.")
                 # Build realistic fallback report based on city
@@ -323,11 +346,22 @@ Average monthly rents for student/working professional hostels in **Katraj, Pune
 - **Premium Amenities Surcharge**: Add high-speed dedicated student Wi-Fi and premium meal packages to charge a ₹1,500/month convenience bundle fee.
 - **Advance Payments Discounts**: Introduce a 5% discount for semester-wise advance payments to lock in upfront cash flow.
 """
-                reports.append({
-                    "property_name": prop_name,
-                    "city": city,
-                    "analysis": fallback_report.strip() + "\n\n*(Note: Generated via fallback intelligence due to Gemini API rate limits)*"
-                })
+                analysis_text = fallback_report.strip() + "\n\n*(Note: Generated via fallback intelligence due to Gemini API rate limits)*"
+                
+        # Save to database cache
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT OR REPLACE INTO market_analysis_cache (property_id, analysis, created_at) VALUES (?, ?, datetime('now'))",
+                (prop_id, analysis_text)
+            )
+            conn.commit()
+            
+        reports.append({
+            "property_name": prop_name,
+            "city": city,
+            "analysis": analysis_text
+        })
             
     return {"reports": reports}
 
