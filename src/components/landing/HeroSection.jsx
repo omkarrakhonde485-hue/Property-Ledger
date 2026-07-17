@@ -43,7 +43,7 @@ export default function HeroSection({ onLoginClick }) {
               </Button>
               <button
                 onClick={() => navigate('/tenant-portal')}
-                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-semibold transition-all duration-300 h-11 px-6 bg-emerald-500/20 backdrop-blur-[24px] border border-emerald-400/40 text-emerald-100 hover:bg-emerald-500/30 hover:border-emerald-300 shadow-lg shadow-emerald-950/20"
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-bold transition-all duration-300 h-11 px-6 bg-white/10 backdrop-blur-[24px] border border-white/30 text-white hover:bg-blue-600 hover:text-black hover:border-blue-600 shadow-lg shadow-blue-950/20"
               >
                 Tenant Portal 📱
               </button>

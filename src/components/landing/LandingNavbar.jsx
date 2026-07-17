@@ -59,9 +59,9 @@ export default function LandingNavbar({ onLoginClick }) {
             <Link to="/tenant-portal">
               <Button
                 variant="outline"
-                className="text-sm font-medium border-slate-300 text-slate-700 hover:text-slate-900 rounded-full"
+                className="text-sm font-semibold border-slate-300 text-slate-800 bg-white/80 hover:bg-blue-600 hover:text-black hover:border-blue-600 transition-all duration-300 shadow-sm rounded-full"
               >
-                Tenant Portal
+                Tenant Portal 📱
               </Button>
             </Link>
             <button

@@ -392,26 +392,32 @@ export default function TenantPortal() {
               </div>
             </div>
             
-            <CardContent className="bg-white dark:bg-slate-900 p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-slate-100 dark:border-slate-800">
+            <CardContent className="bg-slate-50/70 dark:bg-slate-900 p-5 grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                <div className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                  <Phone className="w-4 h-4" />
+                </div>
                 <div>
-                  <p className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500">Contact Number</p>
-                  <p className="text-sm font-medium">{tenant.mobile_number}</p>
+                  <p className="text-[11px] uppercase font-bold text-slate-600 dark:text-slate-400 tracking-wider">Contact Number</p>
+                  <p className="text-sm font-extrabold text-slate-900 dark:text-white">{tenant.mobile_number || 'N/A'}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <FileText className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                <div className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                  <FileText className="w-4 h-4" />
+                </div>
                 <div>
-                  <p className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500">Aadhaar Number</p>
-                  <p className="text-sm font-medium">{tenant.aadhaar_number || 'Not Provided'}</p>
+                  <p className="text-[11px] uppercase font-bold text-slate-600 dark:text-slate-400 tracking-wider">Aadhaar Number</p>
+                  <p className="text-sm font-extrabold text-slate-900 dark:text-white">{tenant.aadhaar_number || 'Not Provided'}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <Calendar className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                <div className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                  <Calendar className="w-4 h-4" />
+                </div>
                 <div>
-                  <p className="text-[10px] uppercase font-semibold text-slate-400 dark:text-slate-500">Occupation / Employer</p>
-                  <p className="text-sm font-medium">{tenant.occupation} {tenant.company_name ? `(${tenant.company_name})` : ''}</p>
+                  <p className="text-[11px] uppercase font-bold text-slate-600 dark:text-slate-400 tracking-wider">Occupation / Employer</p>
+                  <p className="text-sm font-extrabold text-slate-900 dark:text-white">{tenant.occupation || 'N/A'} {tenant.company_name ? `(${tenant.company_name})` : ''}</p>
                 </div>
               </div>
             </CardContent>
@@ -452,11 +458,11 @@ export default function TenantPortal() {
             <Card className="border border-slate-200 dark:border-slate-850 shadow-sm bg-white dark:bg-slate-900">
               <CardHeader className="pb-3 flex flex-row items-center justify-between border-b border-slate-100 dark:border-slate-800">
                 <div>
-                  <CardTitle className="text-lg font-bold font-heading flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+                  <CardTitle className="text-lg font-bold font-heading flex items-center gap-2 text-slate-900 dark:text-white">
+                    <CreditCard className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                     Rent & Payments Ledger
                   </CardTitle>
-                  <CardDescription className="text-xs">Monitor due dates, payments history, and download tax receipt copies</CardDescription>
+                  <CardDescription className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-0.5">Monitor due dates, payments history, and download tax receipt copies</CardDescription>
                 </div>
               </CardHeader>
               
@@ -464,42 +470,42 @@ export default function TenantPortal() {
                 
                 {/* 3 Metrics Overview */}
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-slate-50 dark:bg-slate-850 p-3 rounded-xl border border-slate-150 dark:border-slate-800 text-center">
-                    <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">Monthly Rent</p>
-                    <p className="text-sm sm:text-lg font-bold text-indigo-600 dark:text-indigo-400 mt-1">₹{monthlyRent.toLocaleString('en-IN')}</p>
+                  <div className="bg-slate-100/80 dark:bg-slate-850 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+                    <p className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Monthly Rent</p>
+                    <p className="text-sm sm:text-lg font-extrabold text-indigo-700 dark:text-indigo-300 mt-1">₹{monthlyRent.toLocaleString('en-IN')}</p>
                   </div>
-                  <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-3 rounded-xl border border-emerald-100 dark:border-emerald-900/50 text-center">
-                    <p className="text-[10px] font-semibold text-emerald-600/80 dark:text-emerald-400/80 uppercase tracking-wide">Total Paid</p>
-                    <p className="text-sm sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-1">₹{totalPaid.toLocaleString('en-IN')}</p>
+                  <div className="bg-emerald-50/80 dark:bg-emerald-950/30 p-3 rounded-xl border border-emerald-200 dark:border-emerald-900/50 text-center">
+                    <p className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">Total Paid</p>
+                    <p className="text-sm sm:text-lg font-extrabold text-emerald-700 dark:text-emerald-300 mt-1">₹{totalPaid.toLocaleString('en-IN')}</p>
                   </div>
-                  <div className="bg-rose-50/50 dark:bg-rose-950/20 p-3 rounded-xl border border-rose-100 dark:border-rose-900/50 text-center">
-                    <p className="text-[10px] font-semibold text-rose-600/80 dark:text-rose-400/80 uppercase tracking-wide">Pending Due</p>
-                    <p className="text-sm sm:text-lg font-bold text-rose-600 dark:text-rose-400 mt-1">₹{totalPending.toLocaleString('en-IN')}</p>
+                  <div className="bg-rose-50/80 dark:bg-rose-950/30 p-3 rounded-xl border border-rose-200 dark:border-rose-900/50 text-center">
+                    <p className="text-[11px] font-bold text-rose-800 dark:text-rose-300 uppercase tracking-wide">Pending Due</p>
+                    <p className="text-sm sm:text-lg font-extrabold text-rose-700 dark:text-rose-300 mt-1">₹{totalPending.toLocaleString('en-IN')}</p>
                   </div>
                 </div>
 
                 {/* Monthly Rent Dues Breakdown */}
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2.5">Rent Dues Breakdown</h4>
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2.5">Rent Dues Breakdown</h4>
                   {rentDues.length === 0 ? (
                     <div className="text-center py-4 bg-slate-50 dark:bg-slate-855 rounded-lg text-slate-400 text-xs">No Rent Dues Logged</div>
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {rentDues.slice(0, 6).map(due => (
-                        <div key={due.id} className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/50 flex items-center justify-between">
+                        <div key={due.id} className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+                            <p className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
                               {due.month}/{due.year}
                             </p>
-                            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                            <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">
                               Due: ₹{due.rent_amount} | Paid: ₹{due.amount_paid || 0}
                             </p>
                           </div>
                           <div>
-                            <Badge className={`text-[10px] font-bold px-2 py-0.5 uppercase tracking-wide rounded ${
-                              due.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900' :
-                              due.status === 'Partially Paid' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900' :
-                              'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900'
+                            <Badge className={`text-[10px] font-extrabold px-2 py-0.5 uppercase tracking-wide rounded ${
+                              due.status === 'Paid' ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-900' :
+                              due.status === 'Partially Paid' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-900' :
+                              'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-900'
                             }`}>
                               {due.status}
                             </Badge>
@@ -512,35 +518,35 @@ export default function TenantPortal() {
 
                 {/* History Table of Payments */}
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2.5">Payment Transactions</h4>
+                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2.5">Payment Transactions</h4>
                   {payments.length === 0 ? (
                     <div className="text-center py-6 bg-slate-50 dark:bg-slate-850 rounded-lg text-slate-400 text-sm">No transaction records found.</div>
                   ) : (
-                    <div className="overflow-x-auto border border-slate-100 dark:border-slate-800 rounded-xl">
+                    <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl">
                       <table className="w-full text-left border-collapse text-xs sm:text-sm">
                         <thead>
-                          <tr className="bg-slate-50 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-800 text-slate-500">
-                            <th className="p-3 font-semibold">Rent Period</th>
-                            <th className="p-3 font-semibold">Date</th>
-                            <th className="p-3 font-semibold">Amount</th>
-                            <th className="p-3 font-semibold">Method</th>
-                            <th className="p-3 font-semibold text-right">Tax Receipt (HRA)</th>
+                          <tr className="bg-slate-100/80 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
+                            <th className="p-3 font-bold">Rent Period</th>
+                            <th className="p-3 font-bold">Date</th>
+                            <th className="p-3 font-bold">Amount</th>
+                            <th className="p-3 font-bold">Method</th>
+                            <th className="p-3 font-bold text-right">Tax Receipt (HRA)</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                           {payments.map(pay => (
                             <tr key={pay.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-850/30">
-                              <td className="p-3 font-bold text-indigo-600 dark:text-indigo-400">
+                              <td className="p-3 font-extrabold text-indigo-700 dark:text-indigo-400">
                                 {pay.rent_month || 'Current Month'}
                               </td>
-                              <td className="p-3 text-slate-500 dark:text-slate-400">
+                              <td className="p-3 text-slate-700 dark:text-slate-300 font-medium">
                                 {pay.payment_date}
                               </td>
-                              <td className="p-3 font-semibold text-emerald-600 dark:text-emerald-400">
+                              <td className="p-3 font-extrabold text-emerald-700 dark:text-emerald-400">
                                 ₹{pay.amount.toLocaleString('en-IN')}
                               </td>
                               <td className="p-3">
-                                <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-medium uppercase text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">
+                                <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold uppercase text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
                                   {pay.payment_method || 'UPI'}
                                 </span>
                               </td>
@@ -548,7 +554,7 @@ export default function TenantPortal() {
                                 <Button 
                                   size="sm" 
                                   variant="outline" 
-                                  className="h-7 text-[10px] px-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50 dark:border-indigo-900 dark:text-indigo-400 dark:hover:bg-indigo-950/30"
+                                  className="h-7 text-[10px] font-bold px-2.5 border-indigo-300 text-indigo-700 hover:bg-indigo-600 hover:text-white dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-900"
                                   onClick={() => printReceipt(pay)}
                                 >
                                   <Receipt className="w-3 h-3 mr-1" />
@@ -569,11 +575,11 @@ export default function TenantPortal() {
             {/* COMPLIANCE STATUS CHECKLIST */}
             <Card className="border border-slate-200 dark:border-slate-855 shadow-sm bg-white dark:bg-slate-900">
               <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
-                <CardTitle className="text-lg font-bold font-heading flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+                <CardTitle className="text-lg font-bold font-heading flex items-center gap-2 text-slate-900 dark:text-white">
+                  <Shield className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                   Compliance & Verification Checklist
                 </CardTitle>
-                <CardDescription className="text-xs">Verification checks mandatory for residency compliance and tax exemption status</CardDescription>
+                <CardDescription className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-0.5">Verification checks mandatory for residency compliance and tax exemption status</CardDescription>
               </CardHeader>
               <CardContent className="pt-6 space-y-6">
                 
@@ -589,12 +595,12 @@ export default function TenantPortal() {
                     )}
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-bold text-slate-800 dark:text-white">Police Verification Certificate</h4>
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">Police Verification Certificate</h4>
                         <Badge className={hasPoliceVerification ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900" : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900"}>
                           {hasPoliceVerification ? "Verified" : "Pending Action"}
                         </Badge>
                       </div>
-                      <p className="text-xs text-slate-400 dark:text-slate-500">
+                      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                         Required by local municipal corporation bylaws. Please upload your verification certificate if not done.
                       </p>
                       {!hasPoliceVerification && (
@@ -636,12 +642,12 @@ export default function TenantPortal() {
                     )}
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-bold text-slate-800 dark:text-white">Lease/Rental Agreement (11 Months)</h4>
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">Lease/Rental Agreement (11 Months)</h4>
                         <Badge className={rentAgreementDoc ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900" : "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900"}>
                           {rentAgreementDoc ? "Signed" : "Draft Ready"}
                         </Badge>
                       </div>
-                      <p className="text-xs text-slate-400 dark:text-slate-500">
+                      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                         Formal lease deed with digital stamp paper. Used for address verification and HRA tax filings.
                       </p>
                       <div className="pt-1.5 flex gap-2">
@@ -673,11 +679,11 @@ export default function TenantPortal() {
                   {/* Uploaded Documents List & KYC Uploader */}
                   <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-4">
                     <div>
-                      <h4 className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                         <UploadCloud className="w-4 h-4 text-indigo-500" />
                         KYC Document Archives
                       </h4>
-                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium mt-0.5">
                         Upload ID proofs, address proofs, company letters to your ledger dossier.
                       </p>
                     </div>
@@ -685,25 +691,25 @@ export default function TenantPortal() {
                     {/* KYC Document Upload Form */}
                     <form onSubmit={handleUploadDoc} className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end pt-1">
                       <div className="space-y-1">
-                        <label className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">Document Type/Label</label>
+                        <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-400">Document Type/Label</label>
                         <Input 
                           placeholder="e.g. Aadhaar Card Front" 
                           value={uploadDocName}
                           onChange={(e) => setUploadDocName(e.target.value)}
-                          className="h-8 text-xs"
+                          className="h-8 text-xs bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-medium border-slate-300 dark:border-slate-700"
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">Select File</label>
+                        <label className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-400">Select File</label>
                         <Input 
                           type="file" 
                           ref={fileInputRef}
                           onChange={(e) => setUploadFile(e.target.files[0])}
-                          className="h-8 text-xs py-1"
+                          className="h-8 text-xs py-1 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-medium border-slate-300 dark:border-slate-700"
                         />
                       </div>
                       <div>
-                        <Button type="submit" disabled={uploading} className="w-full h-8 text-xs bg-indigo-600 hover:bg-indigo-700 text-white">
+                        <Button type="submit" disabled={uploading} className="w-full h-8 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold">
                           {uploading ? 'Uploading...' : 'Upload File'}
                         </Button>
                       </div>
@@ -712,15 +718,15 @@ export default function TenantPortal() {
                     {/* Uploaded Documents Feed */}
                     {documents.length > 0 && (
                       <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 space-y-2">
-                        <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Active Documents</p>
+                        <p className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-400 tracking-wider">Active Documents</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {documents.map(doc => (
                             <div key={doc.id} className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
                               <div className="flex items-center gap-2 min-w-0">
                                 <FileText className="w-4 h-4 text-indigo-500 shrink-0" />
                                 <div className="truncate">
-                                  <p className="font-bold truncate text-slate-750 dark:text-slate-200">{doc.document_name}</p>
-                                  <p className="text-[10px] text-slate-400 truncate">{doc.notes || 'No description'}</p>
+                                  <p className="font-bold truncate text-slate-900 dark:text-slate-100">{doc.document_name}</p>
+                                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{doc.notes || 'No description'}</p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-1.5 ml-2 shrink-0">
@@ -761,11 +767,11 @@ export default function TenantPortal() {
             
             <Card className="border border-slate-200 dark:border-slate-850 shadow-sm bg-white dark:bg-slate-900">
               <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
-                <CardTitle className="text-lg font-bold font-heading flex items-center gap-2">
-                  <ClipboardList className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+                <CardTitle className="text-lg font-bold font-heading flex items-center gap-2 text-slate-900 dark:text-white">
+                  <ClipboardList className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                   Complaints Desk
                 </CardTitle>
-                <CardDescription className="text-xs">Submit repair requests, check technicians updates and tickets log</CardDescription>
+                <CardDescription className="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-0.5">Submit repair requests, check technicians updates and tickets log</CardDescription>
               </CardHeader>
               
               <CardContent className="pt-6 space-y-6">
@@ -773,22 +779,22 @@ export default function TenantPortal() {
                 {/* Submit Complaint Form */}
                 <form onSubmit={handleSubmitComplaint} className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Issue Title</label>
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Issue Title</label>
                     <Input 
                       placeholder="e.g. WiFi Router Not Working" 
                       value={complaintTitle}
                       onChange={(e) => setComplaintTitle(e.target.value)}
                       required
-                      className="text-sm h-9"
+                      className="text-sm h-9 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-medium border-slate-300 dark:border-slate-700"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Category</label>
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Category</label>
                     <select
                       value={complaintCategory}
                       onChange={(e) => setComplaintCategory(e.target.value)}
-                      className="w-full text-sm border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700 dark:text-slate-200 cursor-pointer"
+                      className="w-full text-sm border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-slate-900 dark:text-white cursor-pointer"
                     >
                       <option value="Maintenance">Maintenance</option>
                       <option value="Plumbing">Plumbing</option>
@@ -801,13 +807,13 @@ export default function TenantPortal() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Description of Issue</label>
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Description of Issue</label>
                     <Textarea 
                       placeholder="Provide room details, appliance numbers, or specific problems to help technician..."
                       value={complaintDesc}
                       onChange={(e) => setComplaintDesc(e.target.value)}
                       required
-                      className="text-sm min-h-[90px] resize-y"
+                      className="text-sm min-h-[90px] bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-medium border-slate-300 dark:border-slate-700 resize-y"
                     />
                   </div>
 

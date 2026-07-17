@@ -231,18 +231,30 @@ export default function Tenants() {
                     </div>
 
                     {/* Middle Info Pills */}
-                    <div className="grid grid-cols-2 gap-2 text-xs py-2 px-3 rounded-xl bg-muted/40 border border-border/50">
+                    <div className="grid grid-cols-2 gap-2 text-xs py-2.5 px-3.5 rounded-xl bg-muted/40 border border-border/60">
                       <div className="space-y-0.5">
-                        <span className="text-[10px] text-muted-foreground block font-medium">Property & Room</span>
-                        <span className="font-semibold text-foreground truncate block flex items-center gap-1">
+                        <span className="text-[10px] text-muted-foreground block font-semibold uppercase tracking-wider">Contact Number</span>
+                        <span className="font-bold text-foreground truncate block flex items-center gap-1">
+                          <Phone className="w-3 h-3 text-indigo-500 shrink-0" />
+                          {tenant.mobile_number || 'N/A'}
+                        </span>
+                      </div>
+
+                      <div className="space-y-0.5">
+                        <span className="text-[10px] text-muted-foreground block font-semibold uppercase tracking-wider">Aadhaar ID</span>
+                        <span className="font-bold text-foreground truncate block flex items-center gap-1">
+                          <Shield className="w-3 h-3 text-indigo-500 shrink-0" />
+                          {tenant.aadhaar_number || 'Pending'}
+                        </span>
+                      </div>
+
+                      <div className="space-y-0.5 pt-1 border-t border-border/40 col-span-2 flex justify-between items-center">
+                        <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider flex items-center gap-1">
                           <Building2 className="w-3 h-3 text-indigo-500 shrink-0" />
                           {propName} (R-{roomNum})
                         </span>
-                      </div>
-                      <div className="space-y-0.5">
-                        <span className="text-[10px] text-muted-foreground block font-medium">Security Deposit</span>
-                        <span className="font-semibold text-foreground block">
-                          ₹{(tenant.security_deposit || 0).toLocaleString('en-IN')}
+                        <span className="text-[10px] font-bold text-foreground">
+                          Dep: ₹{(tenant.security_deposit || 0).toLocaleString('en-IN')}
                         </span>
                       </div>
                     </div>

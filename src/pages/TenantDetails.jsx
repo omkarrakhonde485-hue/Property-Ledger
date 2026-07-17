@@ -170,8 +170,11 @@ export default function TenantDetails() {
         </TabsList>
 
         <TabsContent value="personal">
-          <Card>
-            <CardContent className="p-6 grid md:grid-cols-2 gap-4">
+          <Card className="border border-border/80 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-bold text-foreground">Personal & Compliance Information</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 grid sm:grid-cols-2 gap-3.5">
               {[
                 { icon: Phone, label: t('mobileNumber'), value: tenant.mobile_number },
                 { icon: Phone, label: t('alternateMobile'), value: tenant.alternate_mobile },
@@ -180,12 +183,21 @@ export default function TenantDetails() {
                 { icon: Briefcase, label: t('companyName'), value: tenant.company_name },
                 { icon: Phone, label: t('emergencyContactName'), value: tenant.emergency_contact_name },
                 { icon: Phone, label: t('emergencyContactNumber'), value: tenant.emergency_contact_number },
-                { icon: Calendar, label: t('joiningDate'), value: tenant.joining_date ? format(new Date(tenant.joining_date), 'dd MMM yyyy') : '' },
-                { icon: Calendar, label: t('vacatingDate'), value: tenant.vacating_date ? format(new Date(tenant.vacating_date), 'dd MMM yyyy') : '' },
-              ].filter(f => f.value).map(({ icon: Icon, label, value }) => (
-                <div key={label} className="flex items-start gap-3">
-                  <Icon className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <div><p className="text-xs text-muted-foreground">{label}</p><p className="text-sm font-medium">{value}</p></div>
+                { icon: Calendar, label: t('joiningDate'), value: tenant.joining_date ? format(new Date(tenant.joining_date), 'dd MMM yyyy') : null },
+                { icon: Calendar, label: t('vacatingDate'), value: tenant.vacating_date ? format(new Date(tenant.vacating_date), 'dd MMM yyyy') : null },
+              ].map(({ icon: Icon, label, value }) => (
+                <div key={label} className="flex items-start gap-3.5 p-3.5 rounded-xl bg-muted/30 border border-border/60">
+                  <div className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{label}</p>
+                    {value ? (
+                      <p className="text-sm font-bold text-foreground mt-0.5">{value}</p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground/60 font-medium italic mt-0.5">Not Provided</p>
+                    )}
+                  </div>
                 </div>
               ))}
             </CardContent>
