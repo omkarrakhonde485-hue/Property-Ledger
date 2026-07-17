@@ -56,11 +56,19 @@ export default function LandingNavbar({ onLoginClick }) {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
+            <Link to="/tenant-portal">
+              <Button
+                variant="outline"
+                className="text-sm font-medium border-slate-300 text-slate-700 hover:text-slate-900 rounded-full"
+              >
+                Tenant Portal
+              </Button>
+            </Link>
             <button
               onClick={onLoginClick}
               className="text-sm font-medium text-slate-700 hover:text-slate-900 px-4 py-2 rounded-full transition-all hover:bg-white/40"
             >
-              Login
+              Owner Login
             </button>
             <Button
               onClick={() => navigate('/register')}
@@ -96,10 +104,15 @@ export default function LandingNavbar({ onLoginClick }) {
                 </a>
               ))}
               <div className="pt-3 flex flex-col gap-2 border-t border-slate-200/60">
-                <Button variant="outline" onClick={() => { onLoginClick(); setMobileOpen(false); }} className="w-full rounded-full">
-                  Login
+                <Link to="/tenant-portal" className="w-full" onClick={() => setMobileOpen(false)}>
+                  <Button variant="outline" className="w-full rounded-full">
+                    Tenant Portal
+                  </Button>
+                </Link>
+                <Button onClick={() => { onLoginClick(); setMobileOpen(false); }} className="w-full bg-blue-600 hover:bg-blue-700 rounded-full">
+                  Owner Login
                 </Button>
-                <Button onClick={() => navigate('/register')} className="w-full bg-blue-600 hover:bg-blue-700 rounded-full">
+                <Button onClick={() => { navigate('/register'); setMobileOpen(false); }} className="w-full bg-blue-600 hover:bg-blue-700 rounded-full">
                   Get Started
                 </Button>
               </div>

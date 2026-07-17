@@ -32,20 +32,20 @@ export default function HeroSection({ onLoginClick }) {
               A complete digital property ledger to track properties, tenants, rent collection, maintenance, expenses, agreements, and reports effortlessly.
             </p>
 
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <div className="mt-8 flex flex-wrap gap-4">
               <Button
                 size="lg"
-                onClick={() => navigate('/register')}
+                onClick={() => navigate('/dashboard')}
                 className="text-base font-semibold shadow-2xl shadow-blue-900/40 group bg-white text-blue-700 hover:bg-blue-50"
               >
-                Get Started Free
+                Owner Dashboard
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
               <button
-                onClick={onLoginClick}
-                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-semibold transition-all duration-300 h-10 px-8 bg-white/10 backdrop-blur-[24px] border border-white/20 text-white hover:bg-white/20 hover:border-white/40"
+                onClick={() => navigate('/tenant-portal')}
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-semibold transition-all duration-300 h-11 px-6 bg-emerald-500/20 backdrop-blur-[24px] border border-emerald-400/40 text-emerald-100 hover:bg-emerald-500/30 hover:border-emerald-300 shadow-lg shadow-emerald-950/20"
               >
-                Login
+                Tenant Portal 📱
               </button>
             </div>
 

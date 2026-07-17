@@ -129,3 +129,14 @@ CREATE TABLE IF NOT EXISTS notes (
     content TEXT,
     created_at TEXT DEFAULT (datetime('now', 'localtime'))
 );
+
+CREATE TABLE IF NOT EXISTS complaints (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tenant_id INTEGER REFERENCES tenants(id) ON DELETE CASCADE,
+    property_id INTEGER REFERENCES properties(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    category TEXT,
+    status TEXT DEFAULT 'Open',
+    created_at TEXT DEFAULT (datetime('now', 'localtime'))
+);

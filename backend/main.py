@@ -83,7 +83,8 @@ ALLOWED_TABLES = {
     "expenses": "expenses",
     "deposits": "deposits",
     "tenant-documents": "tenant_documents",
-    "notes": "notes"
+    "notes": "notes",
+    "complaints": "complaints"
 }
 
 def get_table_columns(conn, table_name):
