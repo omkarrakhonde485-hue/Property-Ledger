@@ -23,6 +23,8 @@ export default function TenantDetails() {
   const [docFile, setDocFile] = useState(null);
   const [docPreview, setDocPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [sendingReminder, setSendingReminder] = useState(false);
+  const [sendSuccess, setSendSuccess] = useState(false);
 
   const { data: tenant } = useQuery({
     queryKey: ['tenant', tenantId],
@@ -79,6 +81,23 @@ export default function TenantDetails() {
     window.open(`https://wa.me/${tenant.mobile_number?.replace(/\D/g, '')}?text=${msg}`, '_blank');
   };
 
+  const sendAutoReminder = async () => {
+    setSendingReminder(true);
+    try {
+      const res = await api.post('/send-reminder', { tenant_id: Number(tenantId) });
+      if (res.ok) {
+        setSendSuccess(true);
+        setTimeout(() => setSendSuccess(false), 4000);
+      } else {
+        alert("Failed to send automatically:\n" + (res.error || '') + "\n\nTip: " + (res.tip || ''));
+      }
+    } catch (err) {
+      alert("Error calling backend: " + err.message);
+    } finally {
+      setSendingReminder(false);
+    }
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -118,6 +137,16 @@ export default function TenantDetails() {
         {tenant.status === 'Active' && (
           <>
             <Button size="sm" variant="outline" className="shrink-0" onClick={sendWhatsApp}><Bell className="w-4 h-4 mr-1" />{t('sendReminder')}</Button>
+            <Button 
+              size="sm" 
+              variant={sendSuccess ? "secondary" : "default"} 
+              className={`shrink-0 transition-colors ${sendSuccess ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}`} 
+              disabled={sendingReminder} 
+              onClick={sendAutoReminder}
+            >
+              <Bell className="w-4 h-4 mr-1" />
+              {sendingReminder ? 'Sending...' : sendSuccess ? 'Message Sent! ✔' : 'Auto-Send WhatsApp'}
+            </Button>
             <Button size="sm" variant="outline" className="shrink-0 text-amber-600" onClick={() => markNoticeMut.mutate()}>{t('markNoticeGiven')}</Button>
           </>
         )}
