@@ -56,6 +56,45 @@ This is an **owner-only management application**. It is built for simplicity, hi
 - **Framework**: FastAPI (Python 3)
 - **Database**: SQLite (built-in, file-backed `data.db` database)
 - **CORS & Static Files**: Custom FastAPI middleware to serve tenant document uploads locally
+- **AI Integration**: Google Gemini API SDK + OpenRouter REST API
+- **Web Search**: Tavily Search API
+- **WhatsApp Automation**: Mudslide CLI (WhatsApp Web API wrapper)
+
+---
+
+## 🧠 AI & Automation Architecture
+
+The platform integrates a robust multi-tiered AI and automation pipeline designed to be highly responsive, reliable, and cost-effective:
+
+```mermaid
+graph TD
+    A[Frontend Action] -->|Request Analysis| B[FastAPI Backend]
+    B -->|Fetch Property Localities| C[(SQLite DB)]
+    C -->|Return Area & Rents| B
+    B -->|Tavily Search API| D[Web Search Rents]
+    D -->|Rents Snippets| B
+    B -->|1. Try Google Gemini API| E[Gemini 2.0 Flash]
+    E -->|Success: 200| H[Generate Valuation Report]
+    E -->|Fail / 429 Quota Exceeded| F[2. Try OpenRouter API]
+    F -->|openrouter/free| G[OpenRouter Free Model]
+    G -->|Success: 200| H
+    F -->|Fail / Network Error| I[3. Mock Fallback Intelligence]
+    I -->|Pre-compiled Noida/Pune Reports| H
+    H -->|Return JSON| A
+```
+
+### 1. Automated Smart WhatsApp Reminders
+*   **Gemini Message Personalization**: When triggering rent reminders, Gemini 2.0 Flash automatically drafts a polite, professional, and emoji-rich message tailored to the tenant's outstanding balance, joining date, and name.
+*   **Mudslide Automation Subprocess**: The backend runs `npx mudslide` via subprocess to link and push messages directly to WhatsApp Web.
+*   **Dual API Key Fallback**: If the primary Gemini key is blocked or limited, it forwards the prompt to OpenRouter, falling back to a static friendly text reminder if both APIs are down.
+
+### 2. AI Market Insights & Rent Valuation
+*   **Tavily Search Integration**: The app retrieves the city/address of properties and makes a target search call to the Tavily API to fetch active hostel, PG, and co-living rent listings in that specific neighborhood.
+*   **AI Valuation Comparison**: Gemini compares the property's default rents against these web search results to evaluate if the rooms are underpriced, overpriced, or competitive. It outputs actionable suggestions (amenity add-ons, price increases).
+*   **Cascaded Fault Tolerance**: The system automatically cascades through:
+    1.  **Google AI Studio (Gemini 2.0 Flash)**
+    2.  **OpenRouter (`openrouter/free` router)**
+    3.  **Local Fallback Intelligence** (serving contextually accurate Noida & Pune reports to prevent any live demo failure).
 
 ---
 
