@@ -10,6 +10,7 @@ const translations = {
     expenses: "Expenses",
     reports: "Reports",
     settings: "Settings",
+    aiInsights: "AI Insights",
     
     // Dashboard
     totalProperties: "Total Properties",
@@ -179,6 +180,7 @@ const translations = {
     expenses: "खर्च",
     reports: "अहवाल",
     settings: "सेटिंग्ज",
+    aiInsights: "AI इनसाइट्स",
     
     // Dashboard
     totalProperties: "एकूण मालमत्ता",

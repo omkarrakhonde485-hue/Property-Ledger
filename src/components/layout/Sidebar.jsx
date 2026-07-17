@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import {
   LayoutDashboard, Building2, Users, CreditCard, Receipt,
-  BarChart3, Settings, X, ChevronLeft
+  BarChart3, Settings, X, ChevronLeft, Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -13,6 +13,7 @@ const navItems = [
   { key: 'payments', path: '/payments', icon: CreditCard },
   { key: 'expenses', path: '/expenses', icon: Receipt },
   { key: 'reports', path: '/reports', icon: BarChart3 },
+  { key: 'aiInsights', path: '/ai-insights', icon: Sparkles },
   { key: 'settings', path: '/settings', icon: Settings },
 ];
 

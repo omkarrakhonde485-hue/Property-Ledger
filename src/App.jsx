@@ -19,6 +19,7 @@ const Payments = lazy(() => import('@/pages/Payments'));
 const Expenses = lazy(() => import('@/pages/Expenses'));
 const Reports = lazy(() => import('@/pages/Reports'));
 const Settings = lazy(() => import('@/pages/Settings'));
+const AiInsights = lazy(() => import('@/pages/AiInsights'));
 
 const AuthenticatedApp = () => {
   return (
@@ -35,6 +36,7 @@ const AuthenticatedApp = () => {
           <Route path="/payments" element={<Payments />} />
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/ai-insights" element={<AiInsights />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
         <Route path="*" element={<PageNotFound />} />
