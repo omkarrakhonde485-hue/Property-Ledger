@@ -109,9 +109,29 @@ Property
 
 ---
 
-## 🚦 Quick Start
+## 🚦 Quick Start & Setup
 
-### 1. Run the Backend (Python)
+### 1. Configure local Environment Variables
+Create a file named `.env` in the `backend/` directory:
+```bash
+touch backend/.env
+```
+Inside `backend/.env`, add your Google Gemini API key:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+*(This file is ignored by `.gitignore` so your private API key is never pushed to public Git repositories).*
+
+### 2. Set Up WhatsApp Automation (Mudslide)
+Property Ledger uses **Mudslide** (a lightweight terminal CLI built on the Baileys library) to link your WhatsApp account for automated messages.
+1. Run the login command in your terminal:
+   ```bash
+   npx mudslide login
+   ```
+2. A QR code will display in the console. Open **WhatsApp** on your phone -> Go to **Linked Devices** -> **Link a Device** and scan the code.
+3. Once linked, you can send automated messages directly from the app interface without human intervention.
+
+### 3. Run the Backend (Python)
 Ensure Python 3 is installed.
 
 ```bash
@@ -123,7 +143,7 @@ python main.py
 ```
 *The FastAPI backend will start on **`http://localhost:8000`**. You can view the interactive Swagger docs at `http://localhost:8000/docs`.*
 
-### 2. Run the Frontend (Vite/React)
+### 4. Run the Frontend (Vite/React)
 Make sure Node.js is installed.
 
 ```bash
