@@ -1,5 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
+import api from '@/api/client';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
@@ -33,16 +32,25 @@ export default function TenantForm({ open, onOpenChange, onSave, initialData }) 
     });
   }, [initialData, open]);
 
-  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => db.entities.Property.list() });
-  const { data: rooms = [] } = useQuery({ queryKey: ['rooms'], queryFn: () => db.entities.Room.list() });
-  const { data: beds = [] } = useQuery({ queryKey: ['beds'], queryFn: () => db.entities.Bed.list() });
+  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => api.get('/properties') });
+  const { data: rooms = [] } = useQuery({ queryKey: ['rooms'], queryFn: () => api.get('/rooms') });
+  const { data: beds = [] } = useQuery({ queryKey: ['beds'], queryFn: () => api.get('/beds') });
 
-  const filteredRooms = form.property_id ? rooms.filter(r => r.property_id === form.property_id) : [];
-  const filteredBeds = form.room_id ? beds.filter(b => b.room_id === form.room_id && (b.status === 'Vacant' || b.id === initialData?.bed_id)) : [];
+  const filteredRooms = form.property_id ? rooms.filter(r => String(r.property_id) === String(form.property_id)) : [];
+  const filteredBeds = form.room_id ? beds.filter(b => String(b.room_id) === String(form.room_id) && (b.status === 'Vacant' || String(b.id) === String(initialData?.bed_id))) : [];
 
   const handleSave = () => {
     if (!form.full_name || !form.mobile_number || !form.property_id || !form.room_id) return;
-    onSave(form);
+    const finalForm = {
+      ...form,
+      property_id: Number(form.property_id),
+      room_id: Number(form.room_id),
+      bed_id: form.bed_id ? Number(form.bed_id) : null,
+      family_member_count: Number(form.family_member_count || 0),
+      monthly_rent: Number(form.monthly_rent || 0),
+      security_deposit: Number(form.security_deposit || 0),
+    };
+    onSave(finalForm);
     onOpenChange(false);
   };
 

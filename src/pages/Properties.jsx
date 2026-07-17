@@ -1,5 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
+import api from '@/api/client';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -28,26 +27,26 @@ export default function Properties() {
 
   const { data: properties = [] } = useQuery({
     queryKey: ['properties'],
-    queryFn: () => db.entities.Property.list('-created_date'),
+    queryFn: () => api.get('/properties?sort=-created_at'),
   });
 
   const { data: rooms = [] } = useQuery({
     queryKey: ['rooms'],
-    queryFn: () => db.entities.Room.list(),
+    queryFn: () => api.get('/rooms'),
   });
 
   const { data: beds = [] } = useQuery({
     queryKey: ['beds'],
-    queryFn: () => db.entities.Bed.list(),
+    queryFn: () => api.get('/beds'),
   });
 
   const { data: tenants = [] } = useQuery({
     queryKey: ['tenants'],
-    queryFn: () => db.entities.Tenant.filter({ status: 'Active' }),
+    queryFn: () => api.get('/tenants?status=Active'),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => db.entities.Property.create(data),
+    mutationFn: (data) => api.post('/properties', data),
     onMutate: async (data) => {
       await qc.cancelQueries({ queryKey: ['properties'] });
       const previous = qc.getQueryData(['properties']);
@@ -60,7 +59,7 @@ export default function Properties() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => db.entities.Property.update(id, data),
+    mutationFn: ({ id, data }) => api.put('/properties/' + id, data),
     onMutate: async ({ id, data }) => {
       await qc.cancelQueries({ queryKey: ['properties'] });
       const previous = qc.getQueryData(['properties']);
@@ -72,7 +71,7 @@ export default function Properties() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => db.entities.Property.delete(id),
+    mutationFn: (id) => api.del('/properties/' + id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['properties'] }),
   });
 

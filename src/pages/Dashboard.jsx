@@ -1,4 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+import api from '@/api/client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -20,32 +20,32 @@ export default function Dashboard() {
 
   const { data: properties = [] } = useQuery({
     queryKey: ['properties'],
-    queryFn: () => db.entities.Property.list(),
+    queryFn: () => api.get('/properties'),
   });
 
   const { data: rooms = [] } = useQuery({
     queryKey: ['rooms'],
-    queryFn: () => db.entities.Room.list(),
+    queryFn: () => api.get('/rooms'),
   });
 
   const { data: beds = [] } = useQuery({
     queryKey: ['beds'],
-    queryFn: () => db.entities.Bed.list(),
+    queryFn: () => api.get('/beds'),
   });
 
   const { data: tenants = [] } = useQuery({
     queryKey: ['tenants'],
-    queryFn: () => db.entities.Tenant.list(),
+    queryFn: () => api.get('/tenants'),
   });
 
   const { data: rentDues = [] } = useQuery({
     queryKey: ['rentDues'],
-    queryFn: () => db.entities.RentDue.list(),
+    queryFn: () => api.get('/rent-dues'),
   });
 
   const { data: expenses = [] } = useQuery({
     queryKey: ['expenses'],
-    queryFn: () => db.entities.Expense.list(),
+    queryFn: () => api.get('/expenses'),
   });
 
   const activeTenants = tenants.filter(t => t.status === 'Active');

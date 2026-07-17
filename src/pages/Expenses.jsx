@@ -1,4 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+import api from '@/api/client';
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -35,15 +35,15 @@ export default function Expenses() {
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState({ property_id: '', category: 'Maintenance', amount: 0, expense_date: new Date().toISOString().split('T')[0], description: '' });
 
-  const { data: expenses = [] } = useQuery({ queryKey: ['expenses'], queryFn: () => db.entities.Expense.list('-created_date') });
-  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => db.entities.Property.list() });
+  const { data: expenses = [] } = useQuery({ queryKey: ['expenses'], queryFn: () => api.get('/expenses?sort=-created_at') });
+  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => api.get('/properties') });
 
   const createMut = useMutation({
-    mutationFn: (d) => db.entities.Expense.create(d),
+    mutationFn: (d) => api.post('/expenses', { ...d, property_id: Number(d.property_id), amount: Number(d.amount) }),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['expenses'] }); setFormOpen(false); },
   });
   const deleteMut = useMutation({
-    mutationFn: (id) => db.entities.Expense.delete(id),
+    mutationFn: (id) => api.del('/expenses/' + id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['expenses'] }),
   });
 

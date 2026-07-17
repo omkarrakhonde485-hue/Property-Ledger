@@ -1,5 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
+import api from '@/api/client';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -20,7 +19,7 @@ export default function FloorManager({ propertyId, floors, rooms }) {
   const [form, setForm] = useState({ name: '', floor_number: 0, notes: '' });
 
   const createMut = useMutation({
-    mutationFn: (d) => db.entities.Floor.create({ ...d, property_id: propertyId }),
+    mutationFn: (d) => api.post('/floors', { ...d, property_id: Number(propertyId) }),
     onMutate: async (d) => {
       setFormOpen(false);
       await qc.cancelQueries({ queryKey: ['floors'] });
@@ -33,7 +32,7 @@ export default function FloorManager({ propertyId, floors, rooms }) {
     onSettled: () => qc.invalidateQueries({ queryKey: ['floors'] }),
   });
   const updateMut = useMutation({
-    mutationFn: ({ id, d }) => db.entities.Floor.update(id, d),
+    mutationFn: ({ id, d }) => api.put('/floors/' + id, d),
     onMutate: async ({ id, d }) => {
       setFormOpen(false);
       await qc.cancelQueries({ queryKey: ['floors'] });
@@ -45,7 +44,7 @@ export default function FloorManager({ propertyId, floors, rooms }) {
     onSettled: () => qc.invalidateQueries({ queryKey: ['floors'] }),
   });
   const deleteMut = useMutation({
-    mutationFn: (id) => db.entities.Floor.delete(id),
+    mutationFn: (id) => api.del('/floors/' + id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['floors'] }),
   });
 

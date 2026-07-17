@@ -1,4 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+import api from '@/api/client';
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -29,31 +29,31 @@ export default function RoomDetails() {
 
   const { data: room } = useQuery({
     queryKey: ['room', roomId],
-    queryFn: async () => { const all = await db.entities.Room.list(); return all.find(r => r.id === roomId); },
+    queryFn: () => api.get('/rooms/' + roomId),
     enabled: !!roomId,
   });
 
   const { data: beds = [] } = useQuery({
     queryKey: ['beds', roomId],
-    queryFn: async () => db.entities.Bed.filter({ room_id: roomId }),
+    queryFn: () => api.get('/beds?room_id=' + roomId),
     enabled: !!roomId,
   });
 
   const { data: tenants = [] } = useQuery({
     queryKey: ['tenants'],
-    queryFn: () => db.entities.Tenant.list(),
+    queryFn: () => api.get('/tenants'),
   });
 
   const createBed = useMutation({
-    mutationFn: (d) => db.entities.Bed.create({ ...d, room_id: roomId, status: 'Vacant' }),
+    mutationFn: (d) => api.post('/beds', { ...d, room_id: Number(roomId), status: 'Vacant' }),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['beds'] }); setBedFormOpen(false); },
   });
   const updateBed = useMutation({
-    mutationFn: ({ id, d }) => db.entities.Bed.update(id, d),
+    mutationFn: ({ id, d }) => api.put('/beds/' + id, d),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['beds'] }); setBedFormOpen(false); },
   });
   const deleteBed = useMutation({
-    mutationFn: (id) => db.entities.Bed.delete(id),
+    mutationFn: (id) => api.del('/beds/' + id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['beds'] }),
   });
 

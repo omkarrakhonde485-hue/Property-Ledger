@@ -1,5 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
+import api from '@/api/client';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 // Tenants page — manages tenant list, search, and creation
@@ -31,17 +30,17 @@ export default function Tenants() {
   const [statusFilter, setStatusFilter] = useState('all');
   const refreshing = usePullToRefresh(() => qc.invalidateQueries());
 
-  const { data: tenants = [] } = useQuery({ queryKey: ['tenants'], queryFn: () => db.entities.Tenant.list('-created_date') });
-  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => db.entities.Property.list() });
-  const { data: rooms = [] } = useQuery({ queryKey: ['rooms'], queryFn: () => db.entities.Room.list() });
+  const { data: tenants = [] } = useQuery({ queryKey: ['tenants'], queryFn: () => api.get('/tenants?sort=-created_at') });
+  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => api.get('/properties') });
+  const { data: rooms = [] } = useQuery({ queryKey: ['rooms'], queryFn: () => api.get('/rooms') });
 
   const createMut = useMutation({
     mutationFn: async (data) => {
-      const tenant = await db.entities.Tenant.create({ ...data, status: 'Active' });
-      if (data.bed_id) await db.entities.Bed.update(data.bed_id, { status: 'Occupied' });
+      const tenant = await api.post('/tenants', { ...data, status: 'Active' });
+      if (data.bed_id) await api.put('/beds/' + data.bed_id, { status: 'Occupied' });
       if (data.security_deposit > 0) {
-        await db.entities.Deposit.create({
-          tenant_id: tenant.id, deposit_amount: data.security_deposit,
+        await api.post('/deposits', {
+          tenant_id: tenant.id, deposit_amount: Number(data.security_deposit),
           received_date: data.joining_date || new Date().toISOString().split('T')[0], status: 'Held'
         });
       }

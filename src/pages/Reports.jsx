@@ -1,5 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
+import api from '@/api/client';
 import { useQuery } from '@tanstack/react-query';
 
 import { useI18n } from '@/lib/i18n';
@@ -11,12 +10,12 @@ const COLORS = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'
 export default function Reports() {
   const { t } = useI18n();
 
-  const { data: rooms = [] } = useQuery({ queryKey: ['rooms'], queryFn: () => db.entities.Room.list() });
-  const { data: beds = [] } = useQuery({ queryKey: ['beds'], queryFn: () => db.entities.Bed.list() });
-  const { data: tenants = [] } = useQuery({ queryKey: ['tenants'], queryFn: () => db.entities.Tenant.list() });
-  const { data: rentDues = [] } = useQuery({ queryKey: ['rentDues'], queryFn: () => db.entities.RentDue.list() });
-  const { data: expenses = [] } = useQuery({ queryKey: ['expenses'], queryFn: () => db.entities.Expense.list() });
-  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => db.entities.Property.list() });
+  const { data: rooms = [] } = useQuery({ queryKey: ['rooms'], queryFn: () => api.get('/rooms') });
+  const { data: beds = [] } = useQuery({ queryKey: ['beds'], queryFn: () => api.get('/beds') });
+  const { data: tenants = [] } = useQuery({ queryKey: ['tenants'], queryFn: () => api.get('/tenants') });
+  const { data: rentDues = [] } = useQuery({ queryKey: ['rentDues'], queryFn: () => api.get('/rent-dues') });
+  const { data: expenses = [] } = useQuery({ queryKey: ['expenses'], queryFn: () => api.get('/expenses') });
+  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => api.get('/properties') });
 
   // Occupancy
   const occupiedBeds = beds.filter(b => b.status === 'Occupied').length;

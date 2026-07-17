@@ -1,4 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+import api from '@/api/client';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -17,33 +17,30 @@ export default function PropertyDetails() {
 
   const { data: property } = useQuery({
     queryKey: ['property', propId],
-    queryFn: async () => {
-      const all = await db.entities.Property.list();
-      return all.find(p => p.id === propId);
-    },
+    queryFn: () => api.get('/properties/' + propId),
     enabled: !!propId,
   });
 
   const { data: floors = [] } = useQuery({
     queryKey: ['floors', propId],
-    queryFn: async () => db.entities.Floor.filter({ property_id: propId }),
+    queryFn: () => api.get('/floors?property_id=' + propId),
     enabled: !!propId,
   });
 
   const { data: rooms = [] } = useQuery({
     queryKey: ['rooms', propId],
-    queryFn: async () => db.entities.Room.filter({ property_id: propId }),
+    queryFn: () => api.get('/rooms?property_id=' + propId),
     enabled: !!propId,
   });
 
   const { data: beds = [] } = useQuery({
     queryKey: ['beds'],
-    queryFn: () => db.entities.Bed.list(),
+    queryFn: () => api.get('/beds'),
   });
 
   const { data: tenants = [] } = useQuery({
     queryKey: ['tenants', propId],
-    queryFn: async () => db.entities.Tenant.filter({ property_id: propId }),
+    queryFn: () => api.get('/tenants?property_id=' + propId),
     enabled: !!propId,
   });
 

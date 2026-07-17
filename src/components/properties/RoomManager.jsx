@@ -1,5 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
+import api from '@/api/client';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -30,7 +29,7 @@ export default function RoomManager({ propertyId, floors, rooms, beds }) {
   const [form, setForm] = useState({ floor_id: '', room_number: '', capacity: 1, monthly_rent_default: 0, notes: '' });
 
   const createMut = useMutation({
-    mutationFn: (d) => db.entities.Room.create({ ...d, property_id: propertyId, status: 'Vacant' }),
+    mutationFn: (d) => api.post('/rooms', { ...d, property_id: Number(propertyId), floor_id: Number(d.floor_id), capacity: Number(d.capacity), monthly_rent_default: Number(d.monthly_rent_default), status: 'Vacant' }),
     onMutate: async (d) => {
       setFormOpen(false);
       await qc.cancelQueries({ queryKey: ['rooms'] });
@@ -43,7 +42,7 @@ export default function RoomManager({ propertyId, floors, rooms, beds }) {
     onSettled: () => qc.invalidateQueries({ queryKey: ['rooms'] }),
   });
   const updateMut = useMutation({
-    mutationFn: ({ id, d }) => db.entities.Room.update(id, d),
+    mutationFn: ({ id, d }) => api.put('/rooms/' + id, { ...d, floor_id: Number(d.floor_id), capacity: Number(d.capacity), monthly_rent_default: Number(d.monthly_rent_default) }),
     onMutate: async ({ id, d }) => {
       setFormOpen(false);
       await qc.cancelQueries({ queryKey: ['rooms'] });
@@ -55,7 +54,7 @@ export default function RoomManager({ propertyId, floors, rooms, beds }) {
     onSettled: () => qc.invalidateQueries({ queryKey: ['rooms'] }),
   });
   const deleteMut = useMutation({
-    mutationFn: (id) => db.entities.Room.delete(id),
+    mutationFn: (id) => api.del('/rooms/' + id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['rooms'] }),
   });
 

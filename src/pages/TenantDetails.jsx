@@ -1,4 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+import api from '@/api/client';
 
 import { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -26,45 +26,45 @@ export default function TenantDetails() {
 
   const { data: tenant } = useQuery({
     queryKey: ['tenant', tenantId],
-    queryFn: async () => { const all = await db.entities.Tenant.list(); return all.find(t => t.id === tenantId); },
+    queryFn: () => api.get('/tenants/' + tenantId),
     enabled: !!tenantId,
   });
   const { data: payments = [] } = useQuery({
     queryKey: ['payments', tenantId],
-    queryFn: () => db.entities.Payment.filter({ tenant_id: tenantId }),
+    queryFn: () => api.get('/payments?tenant_id=' + tenantId),
     enabled: !!tenantId,
   });
   const { data: deposits = [] } = useQuery({
     queryKey: ['deposits', tenantId],
-    queryFn: () => db.entities.Deposit.filter({ tenant_id: tenantId }),
+    queryFn: () => api.get('/deposits?tenant_id=' + tenantId),
     enabled: !!tenantId,
   });
   const { data: rentDues = [] } = useQuery({
     queryKey: ['rentDues', tenantId],
-    queryFn: () => db.entities.RentDue.filter({ tenant_id: tenantId }),
+    queryFn: () => api.get('/rent-dues?tenant_id=' + tenantId),
     enabled: !!tenantId,
   });
   const { data: documents = [] } = useQuery({
     queryKey: ['tenantDocs', tenantId],
-    queryFn: () => db.entities.TenantDocument.filter({ tenant_id: tenantId }),
+    queryFn: () => api.get('/tenant-documents?tenant_id=' + tenantId),
     enabled: !!tenantId,
   });
-  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => db.entities.Property.list() });
-  const { data: rooms = [] } = useQuery({ queryKey: ['rooms'], queryFn: () => db.entities.Room.list() });
+  const { data: properties = [] } = useQuery({ queryKey: ['properties'], queryFn: () => api.get('/properties') });
+  const { data: rooms = [] } = useQuery({ queryKey: ['rooms'], queryFn: () => api.get('/rooms') });
 
   const markNoticeMut = useMutation({
-    mutationFn: () => db.entities.Tenant.update(tenantId, { status: 'Notice Given' }),
+    mutationFn: () => api.put('/tenants/' + tenantId, { status: 'Notice Given' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['tenant', tenantId] }),
   });
   const markVacatedMut = useMutation({
     mutationFn: async () => {
-      await db.entities.Tenant.update(tenantId, { status: 'Vacated', vacating_date: new Date().toISOString().split('T')[0] });
-      if (tenant?.bed_id) await db.entities.Bed.update(tenant.bed_id, { status: 'Vacant' });
+      await api.put('/tenants/' + tenantId, { status: 'Vacated', vacating_date: new Date().toISOString().split('T')[0] });
+      if (tenant?.bed_id) await api.put('/beds/' + tenant.bed_id, { status: 'Vacant' });
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['tenant', tenantId] }); qc.invalidateQueries({ queryKey: ['beds'] }); },
   });
   const deleteDocMut = useMutation({
-    mutationFn: (id) => db.entities.TenantDocument.delete(id),
+    mutationFn: (id) => api.del('/tenant-documents/' + id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['tenantDocs', tenantId] }),
   });
 
@@ -89,8 +89,8 @@ export default function TenantDetails() {
   const handleUploadDoc = async () => {
     if (!docName.trim() || !docFile) return;
     setUploading(true);
-    const { file_url } = await db.integrations.Core.UploadFile({ file: docFile });
-    await db.entities.TenantDocument.create({ tenant_id: tenantId, document_name: docName.trim(), document_url: file_url });
+    const { file_url } = await api.upload(docFile);
+    await api.post('/tenant-documents', { tenant_id: Number(tenantId), document_name: docName.trim(), document_url: file_url });
     qc.invalidateQueries({ queryKey: ['tenantDocs', tenantId] });
     setDocName('');
     setDocFile(null);

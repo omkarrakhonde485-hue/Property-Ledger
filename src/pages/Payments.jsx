@@ -1,4 +1,4 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+import api from '@/api/client';
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -29,31 +29,36 @@ export default function Payments() {
 
   const refreshing = usePullToRefresh(() => qc.invalidateQueries());
 
-  const { data: payments = [] } = useQuery({ queryKey: ['payments'], queryFn: () => db.entities.Payment.list('-created_date') });
-  const { data: tenants = [] } = useQuery({ queryKey: ['tenants'], queryFn: () => db.entities.Tenant.list() });
+  const { data: payments = [] } = useQuery({ queryKey: ['payments'], queryFn: () => api.get('/payments?sort=-created_at') });
+  const { data: tenants = [] } = useQuery({ queryKey: ['tenants'], queryFn: () => api.get('/tenants') });
 
   const activeTenants = tenants.filter(t => t.status === 'Active' || t.status === 'Notice Given');
 
   const createMut = useMutation({
     mutationFn: async (data) => {
-      const tenant = tenants.find(t => t.id === data.tenant_id);
-      const payment = await db.entities.Payment.create({ ...data, property_id: tenant?.property_id });
-      // Update or create rent due
+      const tenant = tenants.find(t => t.id === Number(data.tenant_id));
+      const payload = {
+        ...data,
+        tenant_id: Number(data.tenant_id),
+        amount: Number(data.amount),
+        property_id: tenant?.property_id ? Number(tenant.property_id) : null
+      };
+      const payment = await api.post('/payments', payload);
       if (data.rent_month) {
         const [y, m] = data.rent_month.split('-').map(Number);
-        const existing = await db.entities.RentDue.filter({ tenant_id: data.tenant_id, month: m, year: y });
+        const existing = await api.get(`/rent-dues?tenant_id=${payload.tenant_id}&month=${m}&year=${y}`);
         if (existing.length > 0) {
           const due = existing[0];
-          const newPaid = (due.amount_paid || 0) + data.amount;
+          const newPaid = (due.amount_paid || 0) + payload.amount;
           const pending = Math.max(0, (due.rent_amount || 0) - newPaid);
           const status = pending <= 0 ? 'Paid' : newPaid > 0 ? 'Partially Paid' : 'Unpaid';
-          await db.entities.RentDue.update(due.id, { amount_paid: newPaid, pending_amount: pending, status });
+          await api.put('/rent-dues/' + due.id, { amount_paid: newPaid, pending_amount: pending, status });
         } else {
           const rentAmt = tenant?.monthly_rent || 0;
-          const pending = Math.max(0, rentAmt - data.amount);
-          await db.entities.RentDue.create({
-            tenant_id: data.tenant_id, property_id: tenant?.property_id,
-            month: m, year: y, rent_amount: rentAmt, amount_paid: data.amount,
+          const pending = Math.max(0, rentAmt - payload.amount);
+          await api.post('/rent-dues', {
+            tenant_id: payload.tenant_id, property_id: tenant?.property_id ? Number(tenant.property_id) : null,
+            month: m, year: y, rent_amount: rentAmt, amount_paid: payload.amount,
             pending_amount: pending, status: pending <= 0 ? 'Paid' : 'Partially Paid'
           });
         }

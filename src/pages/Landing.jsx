@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import AnimatedBackground from '@/components/landing/AnimatedBackground';
 import LandingNavbar from '@/components/landing/LandingNavbar';
 import HeroSection from '@/components/landing/HeroSection';
@@ -13,17 +12,18 @@ import Pricing from '@/components/landing/Pricing';
 import FAQ from '@/components/landing/FAQ';
 import FinalCTA from '@/components/landing/FinalCTA';
 import LandingFooter from '@/components/landing/LandingFooter';
-import LoginModal from '@/components/landing/LoginModal';
 
 export default function Landing() {
-  const [loginOpen, setLoginOpen] = useState(false);
+  const handleLoginClick = () => {
+    window.location.href = '/dashboard';
+  };
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       <AnimatedBackground />
-      <LandingNavbar onLoginClick={() => setLoginOpen(true)} />
+      <LandingNavbar onLoginClick={handleLoginClick} />
       <main>
-        <HeroSection onLoginClick={() => setLoginOpen(true)} />
+        <HeroSection onLoginClick={handleLoginClick} />
         <FeaturesSection />
         <ExperienceSection />
         <HowItWorks />
@@ -36,7 +36,6 @@ export default function Landing() {
         <FinalCTA />
       </main>
       <LandingFooter />
-      <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
     </div>
   );
 }

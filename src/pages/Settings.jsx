@@ -1,5 +1,3 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
 import { useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 
@@ -24,9 +22,9 @@ export default function Settings() {
   const { t, lang, setLang } = useI18n();
   const [deleting, setDeleting] = useState(false);
 
-  const handleDeleteAccount = async () => {
+  const handleDeleteAccount = () => {
     setDeleting(true);
-    await db.auth.logout('/');
+    window.location.href = '/';
   };
 
   return (
