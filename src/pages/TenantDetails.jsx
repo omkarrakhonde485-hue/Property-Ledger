@@ -74,7 +74,11 @@ export default function TenantDetails() {
 
   const propName = properties.find(p => p.id === tenant.property_id)?.name || '';
   const roomNum = rooms.find(r => r.id === tenant.room_id)?.room_number || '';
-  const statusColors = { 'Active': 'bg-emerald-100 text-emerald-700', 'Notice Given': 'bg-amber-100 text-amber-700', 'Vacated': 'bg-slate-100 text-slate-500' };
+  const statusColors = { 
+    'Active': 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 font-bold', 
+    'Notice Given': 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 font-bold', 
+    'Vacated': 'bg-slate-500/15 text-slate-700 dark:text-slate-400 border-slate-500/30 font-bold' 
+  };
 
   const sendWhatsApp = () => {
     const msg = encodeURIComponent(`Hi ${tenant.full_name}, this is a rent reminder. Your monthly rent of ₹${tenant.monthly_rent} is due. Please pay at the earliest.`);
@@ -207,7 +211,7 @@ export default function TenantDetails() {
                         <p className="text-sm font-medium">{due.month}/{due.year}</p>
                         <p className="text-xs text-muted-foreground">₹{(due.amount_paid || 0).toLocaleString('en-IN')} / ₹{(due.rent_amount || 0).toLocaleString('en-IN')}</p>
                       </div>
-                      <Badge variant="outline" className={`text-[10px] ${due.status === 'Paid' ? 'bg-emerald-100 text-emerald-700' : due.status === 'Partially Paid' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>{due.status}</Badge>
+                      <Badge variant="outline" className={`text-[10px] font-bold ${due.status === 'Paid' ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30' : due.status === 'Partially Paid' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30' : 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30'}`}>{due.status}</Badge>
                     </div>
                   ))}
                 </div>
