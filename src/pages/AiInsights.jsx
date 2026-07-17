@@ -420,14 +420,14 @@ export default function AiInsights() {
                                   {/* Highlighted Side-by-Side Rents */}
                                   <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border/40 text-xs">
                                     {ourRent && (
-                                      <div className="space-y-0.5">
+                                      <div className="space-y-0.5 flex flex-col justify-center pl-2">
                                         <span className="text-[10px] text-muted-foreground block font-medium">Our Rent</span>
-                                        <span className="text-sm font-extrabold text-foreground">{ourRent}</span>
+                                        <span className="text-base font-extrabold text-foreground">{ourRent}</span>
                                       </div>
                                     )}
-                                    <div className="space-y-0.5 bg-indigo-500/10 dark:bg-indigo-500/15 px-3 py-2 rounded-xl border border-indigo-500/25">
-                                      <span className="text-[9px] text-indigo-600 dark:text-indigo-400 block font-bold uppercase tracking-wider">Market Avg</span>
-                                      <span className="text-xs font-extrabold text-indigo-700 dark:text-indigo-300">{marketRateLabel}</span>
+                                    <div className="space-y-0.5 bg-gradient-to-br from-indigo-500 to-violet-600 dark:from-indigo-600 dark:to-violet-700 px-3.5 py-2.5 rounded-xl border border-indigo-400/20 dark:border-indigo-500/20 text-white shadow-sm shadow-indigo-500/10 dark:shadow-none">
+                                      <span className="text-[9px] text-indigo-100 dark:text-indigo-200 block font-bold uppercase tracking-wider">Market Avg</span>
+                                      <span className="text-sm font-extrabold">{marketRateLabel}</span>
                                     </div>
                                   </div>
                                 </div>
