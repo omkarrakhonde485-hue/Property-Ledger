@@ -116,11 +116,13 @@ Create a file named `.env` in the `backend/` directory:
 ```bash
 touch backend/.env
 ```
-Inside `backend/.env`, add your Google Gemini API key:
+Inside `backend/.env`, configure your API keys:
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_API_KEY=your_gemini_api_key
+TAVILY_API_KEY=your_tavily_search_api_key
+OPENROUTER_API_KEY=your_openrouter_api_key
 ```
-*(This file is ignored by `.gitignore` so your private API key is never pushed to public Git repositories).*
+*(This file is ignored by `.gitignore` so your private API keys are never pushed to public Git repositories).*
 
 ### 2. Set Up WhatsApp Automation (Mudslide)
 Property Ledger uses **Mudslide** (a lightweight terminal CLI built on the Baileys library) to link your WhatsApp account for automated messages.
